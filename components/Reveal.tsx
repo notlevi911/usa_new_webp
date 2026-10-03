@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, ElementType, ReactNode } from 'react';
+import { observeReveal } from '@/lib/revealObserver';
 
 type RevealProps = {
   as?: ElementType;
@@ -30,19 +31,7 @@ export default function Reveal({ as: Tag = 'div', delay = 0, style, className, c
       setVisible(true);
       return;
     }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0, rootMargin: '0px 0px -12% 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    return observeReveal(el, () => setVisible(true));
   }, []);
 
   const revealTransition = `opacity .45s ease ${delay}ms, transform .55s cubic-bezier(.2,.7,.2,1) ${delay}ms`;

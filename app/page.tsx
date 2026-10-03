@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import TransitionLink from '@/components/TransitionLink';
 import CompassMark from '@/components/CompassMark';
 import ThemeToggle from '@/components/ThemeToggle';
 import HeroTrain from '@/components/HeroTrain';
@@ -89,7 +89,7 @@ export default function HomePage() {
                   {i > 0 && (
                     <span className="hero-dot" style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--ink)', margin: '0 clamp(16px,1.8vw,24px) 0 0', flex: 'none' }} />
                   )}
-                  <Link
+                  <TransitionLink
                     href={item.href}
                     className="link-underline-grow"
                     style={{
@@ -100,7 +100,7 @@ export default function HomePage() {
                     }}
                   >
                     {item.label}
-                  </Link>
+                  </TransitionLink>
                 </li>
               ))}
             </ul>
@@ -175,18 +175,18 @@ export default function HomePage() {
               </Reveal>
             </div>
             <Reveal style={{ display: 'inline-block' }}>
-              <Link
+              <TransitionLink
                 href="/products"
                 className="btn-invert"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 22px', border: '1px solid var(--ink)', borderRadius: 999, fontSize: 14, fontWeight: 500, color: 'var(--ink)', transition: 'background .25s ease,color .25s ease' }}
               >
                 Open the catalogue <span aria-hidden="true">→</span>
-              </Link>
+              </TransitionLink>
             </Reveal>
           </div>
           <div style={{ borderTop: '1px solid var(--ink)' }}>
             {rangeRows.map((row) => (
-              <Link key={row.href} href={row.href} style={{ display: 'block', color: 'var(--ink)' }}>
+              <TransitionLink key={row.href} href={row.href} style={{ display: 'block', color: 'var(--ink)' }}>
                 <Reveal
                   delay={row.delay}
                   className="range-row"
@@ -201,7 +201,7 @@ export default function HomePage() {
                     →
                   </span>
                 </Reveal>
-              </Link>
+              </TransitionLink>
             ))}
           </div>
         </div>
@@ -304,13 +304,13 @@ export default function HomePage() {
               Need parts for your next relay batch?
             </h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-              <Link
+              <TransitionLink
                 href="/contact"
                 className="cta-lift"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 26px', borderRadius: 999, background: 'var(--ink)', color: 'var(--paper)', fontSize: 15, fontWeight: 500, transition: 'transform .25s ease' }}
               >
                 Request a quote <span aria-hidden="true">→</span>
-              </Link>
+              </TransitionLink>
               <a
                 href="tel:+919432569419"
                 className="btn-invert"

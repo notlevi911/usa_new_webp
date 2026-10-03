@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import TransitionLink from '@/components/TransitionLink';
 import { useState } from 'react';
 import Reveal from '@/components/Reveal';
 import { useEnquiry } from '@/context/EnquiryContext';
@@ -177,9 +177,9 @@ export default function ContactClient() {
             {items.length === 0 && (
               <div style={{ marginTop: 16, padding: 22, border: '1px dashed var(--line)', borderRadius: 6, fontSize: 14, lineHeight: 1.5, color: 'var(--ink-soft)' }}>
                 No parts added yet.{' '}
-                <Link href="/products" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                <TransitionLink href="/products" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
                   Browse the catalogue
-                </Link>{' '}
+                </TransitionLink>{' '}
                 and tap &ldquo;Add to enquiry&rdquo;.
               </div>
             )}

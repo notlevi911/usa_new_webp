@@ -84,10 +84,11 @@ export default function ProductsClient() {
           top: 64,
           zIndex: 20,
           background: 'var(--glass)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           borderTop: '1px solid var(--line-2)',
           borderBottom: '1px solid var(--line-2)',
+          willChange: 'transform',
         }}
       >
         <div style={{ maxWidth: 1240, margin: '0 auto', padding: '12px clamp(20px,4vw,48px)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 16px' }}>

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import TransitionLink from './TransitionLink';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CompassMark from './CompassMark';
@@ -55,11 +55,12 @@ export default function Header() {
           right: 0,
           zIndex: 50,
           background: 'var(--glass)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           borderBottom: '1px solid var(--line-2)',
           transition: 'transform .45s cubic-bezier(.2,.7,.2,1)',
           transform: hidden ? 'translateY(-101%)' : 'translateY(0)',
+          willChange: 'transform',
         }}
       >
         <div
@@ -74,7 +75,7 @@ export default function Header() {
             gap: 24,
           }}
         >
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink)' }}>
+          <TransitionLink href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink)' }}>
             <CompassMark size={30} />
             <span
               style={{
@@ -87,13 +88,13 @@ export default function Header() {
             >
               United Supply Agency
             </span>
-          </Link>
+          </TransitionLink>
           <nav aria-label="Main" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px,2.2vw,28px)' }}>
             <div className="header-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px,2.2vw,28px)' }}>
               {NAV_LINKS.map((item) => {
                 const on = item.href === '/' ? pathname === '/' : item.href.startsWith('/#') ? false : pathname.startsWith(item.href);
                 return (
-                  <Link
+                  <TransitionLink
                     key={item.label}
                     href={item.href}
                     style={{
@@ -118,7 +119,7 @@ export default function Header() {
                         transition: 'transform .3s ease',
                       }}
                     />
-                  </Link>
+                  </TransitionLink>
                 );
               })}
             </div>

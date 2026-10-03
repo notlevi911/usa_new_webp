@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useEnquiry } from '@/context/EnquiryContext';
+import TransitionLink from './TransitionLink';
 
 export default function EnquiryPill() {
   const { count } = useEnquiry();
@@ -27,7 +27,7 @@ export default function EnquiryPill() {
   if (count === 0 || pathname === '/contact') return null;
 
   return (
-    <Link
+    <TransitionLink
       ref={ref}
       href="/contact"
       style={{
@@ -68,6 +68,6 @@ export default function EnquiryPill() {
       >
         {count}
       </span>
-    </Link>
+    </TransitionLink>
   );
 }

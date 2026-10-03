@@ -3,9 +3,9 @@ import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { EnquiryProvider } from '@/context/EnquiryContext';
+import { CurtainProvider } from '@/context/CurtainContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Curtain from '@/components/Curtain';
 import EnquiryPill from '@/components/EnquiryPill';
 
 const fraunces = Fraunces({
@@ -62,11 +62,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <ThemeProvider>
           <EnquiryProvider>
-            <Header />
-            {children}
-            <Footer />
-            <EnquiryPill />
-            <Curtain />
+            <CurtainProvider>
+              <Header />
+              {children}
+              <Footer />
+              <EnquiryPill />
+            </CurtainProvider>
           </EnquiryProvider>
         </ThemeProvider>
       </body>

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import TransitionLink from './TransitionLink';
 import { useEffect, useRef } from 'react';
 
 const ITEMS = [
@@ -54,7 +54,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
       }}
     >
       {ITEMS.map((item, i) => (
-        <Link
+        <TransitionLink
           key={item.label}
           data-menu-item=""
           href={item.href}
@@ -80,7 +80,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
           >
             {item.label}
           </span>
-        </Link>
+        </TransitionLink>
       ))}
       <div data-menu-item="" style={{ marginTop: 'auto', paddingTop: 32, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 14 }}>
         <a href="tel:+919432569419" style={{ color: 'var(--ink)' }}>

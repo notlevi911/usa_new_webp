@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 export default function HeroTrain() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const animsRef = useRef<Animation[]>([]);
 
   useEffect(() => {
     const root = svgRef.current;
@@ -13,21 +14,29 @@ export default function HeroTrain() {
     const train = root.querySelector('[data-train]') as SVGGElement | null;
     if (!train) return;
 
+    const anims = animsRef.current;
+    const track = (a: Animation | undefined) => {
+      if (a) anims.push(a);
+      return a;
+    };
+
     const D = 16000;
     const SPEED = 2360 / D;
     const loop = { duration: D, iterations: Infinity };
-    train.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(2360px)' }], { ...loop, easing: 'linear' });
+    track(train.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(2360px)' }], { ...loop, easing: 'linear' }));
 
     const body = root.querySelector('[data-body]');
-    body?.animate(
-      [
-        { transform: 'translateY(0)' },
-        { transform: 'translateY(-1.4px)' },
-        { transform: 'translateY(0)' },
-        { transform: 'translateY(-.6px)' },
-        { transform: 'translateY(0)' },
-      ],
-      { duration: 760, iterations: Infinity }
+    track(
+      body?.animate(
+        [
+          { transform: 'translateY(0)' },
+          { transform: 'translateY(-1.4px)' },
+          { transform: 'translateY(0)' },
+          { transform: 'translateY(-.6px)' },
+          { transform: 'translateY(0)' },
+        ],
+        { duration: 760, iterations: Infinity }
+      )
     );
 
     const wp = (r: number) => Math.round((2 * Math.PI * r) / SPEED);
@@ -36,7 +45,7 @@ export default function HeroTrain() {
       const r = +(el.getAttribute('data-wheel') || 0);
       el.style.transformBox = 'fill-box';
       el.style.transformOrigin = 'center';
-      el.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: wp(r), iterations: Infinity });
+      track(el.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: wp(r), iterations: Infinity }));
     });
 
     const rod = root.querySelector('[data-rod]');
@@ -46,49 +55,55 @@ export default function HeroTrain() {
         const a = (i / 16) * Math.PI * 2;
         keyframes.push({ transform: `translate(${(Math.cos(a) * 7).toFixed(2)}px,${(Math.sin(a) * 7).toFixed(2)}px)` });
       }
-      rod.animate(keyframes, { duration: wp(17), iterations: Infinity });
+      track(rod.animate(keyframes, { duration: wp(17), iterations: Infinity }));
     }
 
     const arm = root.querySelector('[data-arm]') as SVGGElement | null;
     if (arm) {
       arm.style.transformBox = 'fill-box';
       arm.style.transformOrigin = 'left center';
-      arm.animate(
-        [
-          { transform: 'rotate(0deg)', offset: 0 },
-          { transform: 'rotate(0deg)', offset: 0.3 },
-          { transform: 'rotate(-44deg)', offset: 0.36 },
-          { transform: 'rotate(-40deg)', offset: 0.38 },
-          { transform: 'rotate(-40deg)', offset: 0.9 },
-          { transform: 'rotate(4deg)', offset: 0.95 },
-          { transform: 'rotate(0deg)', offset: 0.97 },
-          { transform: 'rotate(0deg)', offset: 1 },
-        ],
-        { ...loop, easing: 'ease-in-out' }
+      track(
+        arm.animate(
+          [
+            { transform: 'rotate(0deg)', offset: 0 },
+            { transform: 'rotate(0deg)', offset: 0.3 },
+            { transform: 'rotate(-44deg)', offset: 0.36 },
+            { transform: 'rotate(-40deg)', offset: 0.38 },
+            { transform: 'rotate(-40deg)', offset: 0.9 },
+            { transform: 'rotate(4deg)', offset: 0.95 },
+            { transform: 'rotate(0deg)', offset: 0.97 },
+            { transform: 'rotate(0deg)', offset: 1 },
+          ],
+          { ...loop, easing: 'ease-in-out' }
+        )
       );
     }
 
     const lamp = root.querySelector('[data-lamp]');
-    lamp?.animate(
-      [
-        { fill: 'var(--paper)', offset: 0 },
-        { fill: 'var(--paper)', offset: 0.34 },
-        { fill: 'var(--ink)', offset: 0.37 },
-        { fill: 'var(--ink)', offset: 0.92 },
-        { fill: 'var(--paper)', offset: 0.95 },
-        { fill: 'var(--paper)', offset: 1 },
-      ],
-      loop
+    track(
+      lamp?.animate(
+        [
+          { fill: 'var(--paper)', offset: 0 },
+          { fill: 'var(--paper)', offset: 0.34 },
+          { fill: 'var(--ink)', offset: 0.37 },
+          { fill: 'var(--ink)', offset: 0.92 },
+          { fill: 'var(--paper)', offset: 0.95 },
+          { fill: 'var(--paper)', offset: 1 },
+        ],
+        loop
+      )
     );
 
     const birds = root.querySelector('[data-birds]');
-    birds?.animate(
-      [
-        { transform: 'translate(1700px,120px)' },
-        { transform: 'translate(900px,96px)', offset: 0.5 },
-        { transform: 'translate(-120px,110px)' },
-      ],
-      { duration: 34000, iterations: Infinity, easing: 'linear' }
+    track(
+      birds?.animate(
+        [
+          { transform: 'translate(1700px,120px)' },
+          { transform: 'translate(900px,96px)', offset: 0.5 },
+          { transform: 'translate(-120px,110px)' },
+        ],
+        { duration: 34000, iterations: Infinity, easing: 'linear' }
+      )
     );
 
     const puffs = root.querySelectorAll('[data-puff]');
@@ -100,16 +115,55 @@ export default function HeroTrain() {
       const dy = -60 - (i % 4) * 14;
       const sc = 2 + (i % 3) * 0.5;
       const dur = 2200;
-      el.animate(
-        [
-          { transform: 'translate(0,0) scale(.35)', opacity: 0 },
-          { transform: 'translate(-14px,-20px) scale(.9)', opacity: 1, offset: 0.12 },
-          { transform: `translate(${dx * 0.55}px,${dy * 0.85}px) scale(${sc * 0.7})`, opacity: 0.8, offset: 0.55 },
-          { transform: `translate(${dx}px,${dy}px) scale(${sc})`, opacity: 0 },
-        ],
-        { duration: dur, delay: i * (dur / puffs.length), iterations: Infinity, easing: 'cubic-bezier(.2,.6,.3,1)' }
+      track(
+        el.animate(
+          [
+            { transform: 'translate(0,0) scale(.35)', opacity: 0 },
+            { transform: 'translate(-14px,-20px) scale(.9)', opacity: 1, offset: 0.12 },
+            { transform: `translate(${dx * 0.55}px,${dy * 0.85}px) scale(${sc * 0.7})`, opacity: 0.8, offset: 0.55 },
+            { transform: `translate(${dx}px,${dy}px) scale(${sc})`, opacity: 0 },
+          ],
+          { duration: dur, delay: i * (dur / puffs.length), iterations: Infinity, easing: 'cubic-bezier(.2,.6,.3,1)' }
+        )
       );
     });
+
+    return () => {
+      anims.forEach((a) => a.cancel());
+      animsRef.current = [];
+    };
+  }, []);
+
+  // Pause all ~35 looping animations once the hero scrolls out of view, and whenever the
+  // tab is backgrounded — they'd otherwise keep the compositor busy for no visible benefit.
+  useEffect(() => {
+    const root = svgRef.current;
+    if (!root) return;
+
+    const setPlaying = (playing: boolean) => {
+      animsRef.current.forEach((a) => {
+        if (playing) a.play();
+        else a.pause();
+      });
+    };
+
+    let isIntersecting = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        setPlaying(isIntersecting && !document.hidden);
+      },
+      { threshold: 0 }
+    );
+    io.observe(root);
+
+    const onVisibility = () => setPlaying(isIntersecting && !document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   return (
