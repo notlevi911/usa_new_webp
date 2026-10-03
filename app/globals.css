@@ -31,15 +31,6 @@ html {
   --deep-line: #4a5a4f;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-::view-transition-new(root) {
-  z-index: 2;
-}
-
 body {
   background: var(--paper);
   color: var(--ink);

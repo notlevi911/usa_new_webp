@@ -45,9 +45,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const next: ThemeName = theme === 'dark' ? 'light' : 'dark';
       const prefersReduced =
         typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const supportsViewTransition = typeof document !== 'undefined' && 'startViewTransition' in document;
 
-      if (!supportsViewTransition || prefersReduced) {
+      if (prefersReduced || typeof document === 'undefined') {
         applyTheme(next);
         setTheme(next);
         return;
@@ -56,25 +55,26 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const x = origin?.x ?? window.innerWidth / 2;
       const y = origin?.y ?? 0;
       const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+      const oldPaper = THEMES[theme].paper;
 
-      type ViewTransitionDocument = Document & {
-        startViewTransition: (cb: () => void | Promise<void>) => { ready: Promise<void> };
-      };
-      const vtDoc = document as ViewTransitionDocument;
+      // Swap the theme instantly underneath, then cover it with a flat, old-colored
+      // overlay whose circular clip shrinks away from the click point. This reads the
+      // same as a radial reveal but — unlike the View Transitions API — never needs to
+      // snapshot the whole (content-heavy) page twice, so it stays smooth everywhere.
+      applyTheme(next);
+      setTheme(next);
 
-      const transition = vtDoc.startViewTransition(() => {
-        applyTheme(next);
-        setTheme(next);
-      });
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `position:fixed;inset:0;z-index:200;pointer-events:none;background:${oldPaper};clip-path:circle(${radius}px at ${x}px ${y}px);`;
+      document.body.appendChild(overlay);
 
-      transition.ready
-        .then(() => {
-          document.documentElement.animate(
-            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-            { duration: 950, easing: 'cubic-bezier(.76,0,.24,1)', pseudoElement: '::view-transition-new(root)' }
-          );
-        })
-        .catch(() => {});
+      const anim = overlay.animate(
+        [{ clipPath: `circle(${radius}px at ${x}px ${y}px)` }, { clipPath: `circle(0px at ${x}px ${y}px)` }],
+        { duration: 600, easing: 'cubic-bezier(.76,0,.24,1)' }
+      );
+      const cleanup = () => overlay.remove();
+      anim.onfinish = cleanup;
+      anim.oncancel = cleanup;
     },
     [theme]
   );
