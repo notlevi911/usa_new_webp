@@ -9,10 +9,7 @@ export default function ThemeToggle({ style }: { style?: React.CSSProperties }) 
 
   return (
     <button
-      onClick={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        toggleTheme({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-      }}
+      onClick={toggleTheme}
       aria-label={label}
       title={label}
       className="theme-toggle"

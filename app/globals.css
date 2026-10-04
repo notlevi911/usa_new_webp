@@ -31,10 +31,78 @@ html {
   --deep-line: #4a5a4f;
 }
 
+/* Typed as <color> so the theme toggle can animate these directly (see
+   ThemeContext.tsx) — every element reading var(--ink) etc. then repaints
+   smoothly on its own, with no per-component transition needed. */
+@property --paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ebeee7;
+}
+@property --paper-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e3e7de;
+}
+@property --card {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f3f5f0;
+}
+@property --ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2b3a30;
+}
+@property --ink-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #3d4a41;
+}
+@property --muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6b746c;
+}
+@property --line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c9cfc6;
+}
+@property --line-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d3d8cf;
+}
+@property --glass {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(235, 238, 231, 0.88);
+}
+@property --deep {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2b3a30;
+}
+@property --on-deep {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ebeee7;
+}
+@property --on-deep-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a9b3aa;
+}
+@property --deep-line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4a5a4f;
+}
+
 body {
   background: var(--paper);
   color: var(--ink);
-  transition: background 0.4s ease;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
