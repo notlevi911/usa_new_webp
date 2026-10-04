@@ -55,26 +55,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const x = origin?.x ?? window.innerWidth / 2;
       const y = origin?.y ?? 0;
       const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-      const oldPaper = THEMES[theme].paper;
+      const newPaper = THEMES[next].paper;
 
-      // Swap the theme instantly underneath, then cover it with a flat, old-colored
-      // overlay whose circular clip shrinks away from the click point. This reads the
-      // same as a radial reveal but — unlike the View Transitions API — never needs to
-      // snapshot the whole (content-heavy) page twice, so it stays smooth everywhere.
-      applyTheme(next);
-      setTheme(next);
-
+      // Keep the current theme rendered underneath and grow a new-theme-colored overlay
+      // outward from the click point, so the new theme visibly spreads from where the
+      // user clicked (not away from it). Flip the real DOM to the new theme only once
+      // the overlay already fully covers the screen, then drop it — no visible pop, and
+      // unlike the View Transitions API this never needs to snapshot the whole page.
       const overlay = document.createElement('div');
-      overlay.style.cssText = `position:fixed;inset:0;z-index:200;pointer-events:none;background:${oldPaper};clip-path:circle(${radius}px at ${x}px ${y}px);`;
+      overlay.style.cssText = `position:fixed;inset:0;z-index:200;pointer-events:none;background:${newPaper};clip-path:circle(0px at ${x}px ${y}px);`;
       document.body.appendChild(overlay);
 
       const anim = overlay.animate(
-        [{ clipPath: `circle(${radius}px at ${x}px ${y}px)` }, { clipPath: `circle(0px at ${x}px ${y}px)` }],
-        { duration: 600, easing: 'cubic-bezier(.76,0,.24,1)' }
+        [{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${radius}px at ${x}px ${y}px)` }],
+        { duration: 600, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' }
       );
-      const cleanup = () => overlay.remove();
-      anim.onfinish = cleanup;
-      anim.oncancel = cleanup;
+      anim.onfinish = () => {
+        applyTheme(next);
+        setTheme(next);
+        overlay.remove();
+      };
+      anim.oncancel = () => overlay.remove();
     },
     [theme]
   );
